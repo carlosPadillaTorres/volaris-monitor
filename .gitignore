@@ -1,0 +1,10 @@
+# Secretos: nunca se suben
+.env
+.env.*
+!.env.example
+
+node_modules/
+capturas/
+test-results/
+playwright-report/
+.DS_Store

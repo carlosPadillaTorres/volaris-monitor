@@ -1,0 +1,86 @@
+name: Monitor de precios Volaris
+
+on:
+  schedule:
+    # Cada hora al minuto 17 (UTC). GitHub puede retrasar unos minutos las ejecuciones programadas.
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      modos:
+        description: 'Modos separados por coma (vacío = los activos en config.json). Ej: ida,redondo'
+        required: false
+        default: ''
+      umbral:
+        description: 'Umbral forzado para todos los modos (vacío = el de config.json). Úsalo alto para probar la alerta.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write   # para hacer commit de precios.md / precios.csv / estado.json
+  actions: write    # para auto-desactivar el workflow después de fecha_fin
+
+concurrency:
+  group: volaris-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ¿Ya pasó fecha_fin?
+        id: fecha
+        run: |
+          fin=$(jq -r '.fecha_fin // empty' config.json)
+          tz=$(jq -r '.zona_horaria // "America/Mexico_City"' config.json)
+          hoy=$(TZ="$tz" date +%F)
+          echo "hoy=$hoy fecha_fin=$fin"
+          if [ -n "$fin" ] && [[ "$hoy" > "$fin" ]]; then echo "terminado=true" >> "$GITHUB_OUTPUT"; else echo "terminado=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Desactivar este workflow (fecha_fin superada)
+        if: steps.fecha.outputs.terminado == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow disable "${{ github.workflow }}" --repo "${{ github.repository }}"
+
+      - uses: actions/setup-node@v4
+        if: steps.fecha.outputs.terminado != 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias y Chromium
+        if: steps.fecha.outputs.terminado != 'true'
+        run: |
+          npm ci
+          npx playwright install --with-deps --only-shell chromium
+
+      - name: Correr monitor
+        if: steps.fecha.outputs.terminado != 'true'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MODOS: ${{ github.event.inputs.modos }}
+          UMBRAL: ${{ github.event.inputs.umbral }}
+        run: node src/monitor.mjs
+
+      - name: Guardar capturas de error
+        if: always() && hashFiles('capturas/*.png') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-${{ github.run_id }}
+          path: capturas/
+          retention-days: 7
+
+      - name: Commit del registro
+        if: always() && steps.fecha.outputs.terminado != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add precios.md precios.csv estado.json 2>/dev/null || true
+          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
+          git commit -m "Registro de precios $(TZ=America/Mexico_City date '+%Y-%m-%d %H:%M')"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done
+          exit 1

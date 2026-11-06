@@ -1,0 +1,20 @@
+{
+  "name": "volaris-monitor",
+  "version": "1.0.0",
+  "description": "Monitor de precios de Volaris (tarifa Zero, vuelo directo más barato) con Playwright y alertas por Telegram.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "monitor": "node --env-file-if-exists=.env src/monitor.mjs",
+    "monitor:visible": "HEADLESS=0 node --env-file-if-exists=.env src/monitor.mjs",
+    "chat-id": "node --env-file-if-exists=.env src/chat-id.mjs",
+    "probar-telegram": "node --env-file-if-exists=.env src/probar-telegram.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.65.0"
+  }
+}
