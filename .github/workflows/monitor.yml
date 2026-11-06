@@ -2,7 +2,7 @@ name: Monitor de precios Volaris
 
 on:
   schedule:
-    # Cada hora al minuto 17 (UTC). GitHub puede retrasar unos minutos las ejecuciones programadas.
+    # Cada hora al minuto 17 (UTC). GitHub puede retrasar (o, en repos nuevos, tardar en activar) las ejecuciones programadas.
     - cron: '17 * * * *'
   workflow_dispatch:
     inputs:
