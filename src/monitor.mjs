@@ -152,6 +152,7 @@ async function correrModo(browser, modo, ctx, cacheExtras, estado) {
   const enviar = disparos.length || (cfg.alertar_cambio_tua !== false && avisosTua.length);
   if (enviar) {
     const lineas = [
+      forzado != null ? '🧪 <i>Prueba con umbral forzado</i>' : null,
       disparos.length ? '🔔 <b>Volaris: precio bajo</b>' : 'ℹ️ <b>Volaris: cambió la TUA</b>',
       `<b>Modo:</b> ${modo}`,
       ...elegidos.map((v) => `<b>${v.origen}→${v.destino}</b> ${dia(v.salida)} · ${escaparHtml(v.vuelo)} · ${hora(v.salida)} → ${hora(v.llegada)} · ${mxn(v.porPersona)} pp`),
@@ -162,6 +163,7 @@ async function correrModo(browser, modo, ctx, cacheExtras, estado) {
       `<a href="${escaparHtml(res.url)}">Abrir búsqueda en volaris.com</a>`,
     ].filter(Boolean);
     alerta = (await enviarTelegram(lineas.join('\n'))) ? 'sí' : 'falló envío';
+    if (forzado != null) alerta += ' (prueba)';
   }
 
   return {

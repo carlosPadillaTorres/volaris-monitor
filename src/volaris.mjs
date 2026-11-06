@@ -199,7 +199,18 @@ export async function cotizarExtras(browser, { origen, destino, fecha, vuelo }, 
 
     paso = 'continuar a asientos';
     // "Paga después" la TUA: es solo una opción de la reserva, no se paga nada
-    await page.getByText('Paga después', { exact: true }).first().click({ timeout: 15000 });
+    // el aviso de equipaje o un spinner pueden tapar la página unos segundos: reintentar el cierre y el clic
+    for (let i = 1; ; i++) {
+      try {
+        await page.getByText('Paga después', { exact: true }).first().click({ timeout: 10000 });
+        break;
+      } catch (e) {
+        if (i >= 3) throw e;
+        await page.keyboard.press('Escape').catch(() => {});
+        await page.locator('[role=dialog], mat-dialog-container, .modal').getByText('close', { exact: true }).first().click({ timeout: 3000 }).catch(() => {});
+        await page.waitForTimeout(3000);
+      }
+    }
     const seatP = page.waitForResponse(esRespuesta('/api/seatmap/getallseatmaps', 'GET'), { timeout: 60000 });
     await page.getByRole('button', { name: /Continuar a asientos/i }).last().click();
     const asientos = preciosAsientos(await (await seatP).json(), origen, destino);
