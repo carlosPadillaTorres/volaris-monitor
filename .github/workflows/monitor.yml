@@ -51,11 +51,24 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Instalar dependencias y Chromium
+      - name: Instalar dependencias de npm
         if: steps.fecha.outputs.terminado != 'true'
+        run: npm ci
+
+      - name: Caché de Chromium (Playwright)
+        if: steps.fecha.outputs.terminado != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      # Las librerías del sistema (apt) a veces tardan o se atoran en el runner; se limita el tiempo y se reintenta una vez
+      - name: Instalar Chromium y librerías del sistema
+        if: steps.fecha.outputs.terminado != 'true'
+        timeout-minutes: 6
         run: |
-          npm ci
-          npx playwright install --with-deps --only-shell chromium
+          npx playwright install --only-shell chromium
+          timeout 150 npx playwright install-deps chromium || { echo "Reintentando install-deps…"; sleep 10; timeout 150 npx playwright install-deps chromium; }
 
       - name: Correr monitor
         if: steps.fecha.outputs.terminado != 'true'
