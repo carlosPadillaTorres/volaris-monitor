@@ -14,6 +14,7 @@ _Archivo generado automáticamente desde `precios.csv`; no lo edites a mano._
 | 2026-11-06 14:50 | ida | Y4 7304 · 25/nov 13:15–14:31 | $993 | $2,979 | $621 | $473 pp/vuelo · $1,419 total | $945 · $315 pp | $368–$716 pp · $1,104–$2,148 total | sí (prueba) |
 | 2026-11-06 14:52 | ida | Y4 7304 · 25/nov 13:15–14:31 | $1,010 | $3,030 | $621 | $473 pp/vuelo · $1,419 total | $945 · $315 pp | $368–$716 pp · $1,104–$2,148 total | no |
 | 2026-11-06 17:14 | ida | Y4 7304 · 25/nov 13:15–14:31 | $1,004 | $3,012 | $621 | $604 pp/vuelo · $1,812 total | $1,208 · $403 pp | $403–$781 pp · $1,209–$2,343 total | no |
+| 2026-11-06 20:52 | ida | Y4 7304 · 25/nov 13:15–14:31 | $993 | $2,979 | $621 | $525 pp/vuelo · $1,575 total | $1,050 · $350 pp | $350–$651 pp · $1,050–$1,953 total | no |
 
 ## Redondo (ida + regreso)
 
@@ -24,6 +25,7 @@ _Archivo generado automáticamente desde `precios.csv`; no lo edites a mano._
 | 2026-11-06 14:50 | redondo | Y4 7304 / Y4 7305 · 25/nov 13:15–14:31 / 29/nov 15:01–16:09 | $3,760 (ida $993 + regreso $2,767 | mano por tramo: $473 / $661) | $11,280 | $1,329 | $473 pp/vuelo · $3,402 total | $2,324 · $775 pp | $753–$1,464 pp · $2,259–$4,392 total | sí (prueba) |
 | 2026-11-06 14:52 | redondo | Y4 7304 / Y4 7305 · 25/nov 13:15–14:31 / 29/nov 15:01–16:09 | $3,760 (ida $993 + regreso $2,767 | mano por tramo: $473 / $661) | $11,280 | $1,329 | $473 pp/vuelo · $3,402 total | $2,324 · $775 pp | $771–$1,497 pp · $2,313–$4,491 total | no |
 | 2026-11-06 17:14 | redondo | Y4 7304 / Y4 7305 · 25/nov 13:15–14:31 / 29/nov 15:01–16:09 | $3,760 (ida $993 + regreso $2,767 | mano por tramo: $604 / $661) | $11,280 | $1,329 | $604 pp/vuelo · $3,795 total | $2,587 · $862 pp | $806–$1,562 pp · $2,418–$4,686 total | no |
+| 2026-11-06 20:52 | redondo | Y4 7304 / Y4 7305 · 25/nov 13:15–14:31 / 29/nov 15:01–16:09 | $3,646 (ida $974 + regreso $2,672 | mano por tramo: $525 / $517) | $10,938 | $1,329 | $525 pp/vuelo · $3,126 total | $2,130 · $710 pp | $718–$1,334 pp · $2,154–$4,002 total | no |
 
 ## Regreso
 
