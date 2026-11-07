@@ -137,15 +137,23 @@ async function correrModo(browser, modo, ctx, cacheExtras, estado) {
   // 4) Umbrales
   const m = cfg.modos[modo] ?? {};
   const disparos = [];
+  const maletaPrecio = maleta != null ? maleta * maletas : null;
   if (modo === 'redondo') {
     const u = forzado ?? m.umbral_suma_por_persona;
     if (u != null && boletoPP < u) disparos.push(`suma ida + regreso ${mxn(boletoPP)} < ${mxn(u)} por persona`);
   } else {
     const u = forzado ?? m.umbral_por_persona;
-    if (u != null && boletoPP <= u) disparos.push(`${mxn(boletoPP)} ≤ ${mxn(u)} por persona`);
+    if (u != null && boletoPP < u) disparos.push(`${mxn(boletoPP)} < ${mxn(u)} por persona`);
   }
-  if (m.umbral_con_tua_por_persona != null && tuaPP != null && boletoPP + tuaPP <= m.umbral_con_tua_por_persona) {
-    disparos.push(`con TUA ${mxn(boletoPP + tuaPP)} ≤ ${mxn(m.umbral_con_tua_por_persona)} por persona`);
+  if (m.umbral_con_tua_por_persona != null && tuaPP != null && boletoPP + tuaPP < m.umbral_con_tua_por_persona) {
+    disparos.push(`con TUA ${mxn(boletoPP + tuaPP)} < ${mxn(m.umbral_con_tua_por_persona)} por persona`);
+  }
+  // umbral_maleta (opcional): además del boleto, la(s) maleta(s) documentada(s) deben costar menos de esto.
+  // Si no se pudo cotizar la maleta, se avisa igual por el boleto (mejor un aviso de más que perder el precio).
+  if (disparos.length && m.umbral_maleta != null && forzado == null) {
+    if (maletaPrecio == null) disparos.push('no se pudo cotizar la maleta; revísala en el sitio');
+    else if (maletaPrecio < m.umbral_maleta) disparos.push(`maleta documentada ${mxn(maletaPrecio)} < ${mxn(m.umbral_maleta)}`);
+    else disparos.length = 0;
   }
 
   let alerta = 'no';
@@ -158,6 +166,8 @@ async function correrModo(browser, modo, ctx, cacheExtras, estado) {
       ...elegidos.map((v) => `<b>${v.origen}→${v.destino}</b> ${dia(v.salida)} · ${escaparHtml(v.vuelo)} · ${hora(v.salida)} → ${hora(v.llegada)} · ${mxn(v.porPersona)} pp`),
       `<b>Boleto Zero (sin TUA):</b> ${mxn(boletoPP)} por persona · ${mxn(boletoPP * adultos)} total (${adultos} adultos)`,
       tuaPP != null ? `<b>TUA:</b> ${mxn(tuaPP)} por persona · ${mxn(tuaPP * adultos)} total` : null,
+      maletaPrecio != null ? `<b>Maleta documentada (${maletas}):</b> ${mxn(maletaPrecio)}` : null,
+      mano != null ? `<b>Equipaje de mano:</b> ${mxn(mano)} por persona` : null,
       ...disparos.map((d) => `✅ ${escaparHtml(d)}`),
       ...avisosTua.map((a) => `⚠️ ${escaparHtml(a)}`),
       `<a href="${escaparHtml(res.url)}">Abrir búsqueda en volaris.com</a>`,
@@ -177,7 +187,7 @@ async function correrModo(browser, modo, ctx, cacheExtras, estado) {
     boleto_mas_tua_pp: tuaPP != null ? boletoPP + tuaPP : null,
     mano_pp_por_vuelo: extras.length ? extras[0].mano : null,
     mano_total: mano != null ? mano * adultos : null,
-    maleta_precio: maleta != null ? maleta * maletas : null,
+    maleta_precio: maletaPrecio,
     maleta_pp_prorrateada: maleta != null ? Math.round((maleta * maletas) / adultos) : null,
     asiento_min_pp: asMin,
     asiento_max_pp: asMax,

@@ -12,18 +12,19 @@
   "fallos_para_alerta": 3,
   "modos": {
     "ida": {
-      "activo": true,
+      "activo": false,
       "umbral_por_persona": 600,
       "umbral_con_tua_por_persona": null
     },
     "redondo": {
-      "activo": true,
+      "activo": false,
       "umbral_suma_por_persona": 3400,
       "umbral_con_tua_por_persona": null
     },
     "regreso": {
-      "activo": false,
-      "umbral_por_persona": 600,
+      "activo": true,
+      "umbral_por_persona": 2000,
+      "umbral_maleta": 1000,
       "umbral_con_tua_por_persona": null
     }
   }

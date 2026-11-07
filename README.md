@@ -25,11 +25,13 @@ Para los extras se recorre el flujo con 1 adulto hasta la pantalla de asientos y
 
 | Modo | Qué busca | Umbral |
 |---|---|---|
-| `ida` | origen → destino en `fecha_ida` | boleto por persona **≤** `umbral_por_persona` |
+| `ida` | origen → destino en `fecha_ida` | boleto por persona **<** `umbral_por_persona` |
 | `redondo` | ida + regreso en una sola búsqueda | suma ida + regreso por persona **<** `umbral_suma_por_persona` |
-| `regreso` | destino → origen en `fecha_regreso` | boleto por persona **≤** `umbral_por_persona` |
+| `regreso` | destino → origen en `fecha_regreso` | boleto por persona **<** `umbral_por_persona` |
 
 En cada modo puedes poner, opcionalmente, `umbral_con_tua_por_persona` (boleto + TUA). Con `null` queda apagado.
+
+También puedes poner `umbral_maleta`: el aviso solo sale si, además del boleto, la(s) maleta(s) documentada(s) (`maletas_documentadas_total`) cuestan menos de ese monto. Si la maleta no se pudo cotizar, se avisa igual por el boleto.
 
 ## Configuración (`config.json`)
 
@@ -44,9 +46,9 @@ En cada modo puedes poner, opcionalmente, `umbral_con_tua_por_persona` (boleto +
   "alertar_cambio_tua": true,
   "fallos_para_alerta": 3,
   "modos": {
-    "ida":     { "activo": true,  "umbral_por_persona": 600,       "umbral_con_tua_por_persona": null },
-    "redondo": { "activo": true,  "umbral_suma_por_persona": 3400, "umbral_con_tua_por_persona": null },
-    "regreso": { "activo": false, "umbral_por_persona": 600,       "umbral_con_tua_por_persona": null }
+    "ida":     { "activo": false, "umbral_por_persona": 600,       "umbral_con_tua_por_persona": null },
+    "redondo": { "activo": false, "umbral_suma_por_persona": 3400, "umbral_con_tua_por_persona": null },
+    "regreso": { "activo": true,  "umbral_por_persona": 2000, "umbral_maleta": 1000, "umbral_con_tua_por_persona": null }
   }
 }
 ```
