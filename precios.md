@@ -41,3 +41,4 @@ _Archivo generado automáticamente desde `precios.csv`; no lo edites a mano._
 | 2026-11-06 14:50 | regreso | Y4 7305 · 29/nov 15:01–16:09 | $2,672 | $8,016 | $708 | $661 pp/vuelo · $1,983 total | $1,379 · $460 pp | $385–$748 pp · $1,155–$2,244 total | sí (prueba) |
 | 2026-11-07 18:41 | regreso | Y4 7305 · 29/nov 15:01–16:09 | $2,712 | $8,136 | $708 | $661 pp/vuelo · $1,983 total | $1,379 · $460 pp | $403–$748 pp · $1,209–$2,244 total | no |
 | 2026-11-08 01:26 | regreso | Y4 7305 · 29/nov 15:01–16:09 | $2,712 | $8,136 | $708 | $633 pp/vuelo · $1,899 total | $1,319 · $440 pp | $385–$716 pp · $1,155–$2,148 total | no |
+| 2026-11-08 09:16 | regreso | Y4 7305 · 29/nov 15:01–16:09 | $2,712 | $8,136 | $708 | $661 pp/vuelo · $1,983 total | $1,379 · $460 pp | $403–$748 pp · $1,209–$2,244 total | no |
